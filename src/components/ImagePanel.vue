@@ -27,7 +27,6 @@ const getSrc = () => {
     .catch((_: any) => {
       if (src.value !== '') {
         hasError.value = true
-        getSrc()
       }
     })
 }

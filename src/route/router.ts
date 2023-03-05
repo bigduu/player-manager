@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const Layout = () => import('../components/Layout.vue')
-const Detail = () => import('../components/Detail.vue')
+const Detail = () => import('../components/NodeDetail.vue')
 
 const route_list = [
   { name: 'home', path: '/', component: Layout },
@@ -9,7 +9,7 @@ const route_list = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: route_list
 })
 

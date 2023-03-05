@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from 'vue';
-import { getScreen, pauseVideo, playVideo } from '../client/api';
+import {onMounted, onUnmounted, ref} from 'vue';
+import {getScreen, pauseVideo, playVideo} from '../client/api';
+
 const props = defineProps<{ name: string, ip: string }>()
 
 const src = ref('')
@@ -11,7 +12,7 @@ onMounted(async () => {
   getSrc()
   interval.value = setInterval(async () => {
     getSrc()
-  }, 10000)
+  }, 200)
 })
 
 onUnmounted(() => {
@@ -20,16 +21,15 @@ onUnmounted(() => {
 
 const getSrc = () => {
   getScreen(props.ip)
-    .then((res: string) => {
-      src.value = res
-      hasError.value = false
-    })
-    .catch((_: any) => {
-      if (src.value !== '') {
-        hasError.value = true
-        getSrc()
-      }
-    })
+      .then((res: string) => {
+        src.value = res
+        hasError.value = false
+      })
+      .catch((_: any) => {
+        if (src.value !== '') {
+          hasError.value = true
+        }
+      })
 }
 
 const play = async () => {
@@ -49,23 +49,24 @@ const pause = async () => {
       <el-row type="flex">
         <el-col style="text-align: center;" class="video-name">
           <span>{{ name }}</span>
-          <el-divider />
+          <el-divider/>
         </el-col>
         <el-col>
-          <img v-if="!hasError" style="width: 100%" :src="src" :key="src" />
-          <el-alert style="width: 100%" v-else title="获取截图失败" type="error" />
+          <img v-if="!hasError" style="width: 100%" :src="src" :key="src"/>
+          <el-alert style="width: 100%" v-else title="获取截图失败" type="error"/>
         </el-col>
       </el-row>
-      <el-divider />
+      <el-divider/>
 
       <el-button class="inline-block" type="primary" @click="play" size="small">
         <el-icon>
-          <VideoPlay />
+          <VideoPlay/>
         </el-icon>
-        播放</el-button>
+        播放
+      </el-button>
       <el-button class="inline-block" type="primary" @click="pause" size="small">
         <el-icon>
-          <VideoPause />
+          <VideoPause/>
         </el-icon>
         暂停
       </el-button>
