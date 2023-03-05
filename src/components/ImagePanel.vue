@@ -1,6 +1,10 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from 'vue';
-import { getScreen, pauseVideo, playVideo } from '../client/api';
+import {VideoPlay, VideoPause} from '@element-plus/icons-vue';
+import {ElCard, ElRow, ElCol, ElDivider, ElAlert, ElButton, ElIcon} from 'element-plus';
+import {onMounted, onUnmounted, ref} from 'vue';
+import {getScreen, pauseVideo, playVideo} from '../client/api';
+import router from '../route/router';
+
 const props = defineProps<{ name: string, ip: string }>()
 
 const src = ref('')
@@ -20,15 +24,15 @@ onUnmounted(() => {
 
 const getSrc = () => {
   getScreen(props.ip)
-    .then((res: string) => {
-      src.value = res
-      hasError.value = false
-    })
-    .catch((_: any) => {
-      if (src.value !== '') {
-        hasError.value = true
-      }
-    })
+      .then((res: string) => {
+        src.value = res
+        hasError.value = false
+      })
+      .catch((_: any) => {
+        if (src.value !== '') {
+          hasError.value = true
+        }
+      })
 }
 
 const play = async () => {
@@ -39,32 +43,45 @@ const pause = async () => {
   await pauseVideo(props.ip)
 }
 
+defineExpose({
+  play,
+  pause,
+})
+
+const to_details = (name: string, ip: string) => {
+  router.push({
+    path: `/detail/${name}/${ip}`,
+  })
+}
+
 
 </script>
-
 <template>
   <div v-cloak>
     <el-card>
-      <el-row type="flex">
-        <el-col class="video-name">
-          <span>{{ name }}</span>
-          <el-divider />
-        </el-col>
-        <el-col>
-          <img v-if="!hasError" style="width: 100%;height: 10vh;" :src="src" :key="src" />
-          <el-alert style="width: 100%;height: 10vh;" v-else title="获取预览失败" type="error" />
-        </el-col>
-      </el-row>
-      <el-divider />
+      <div @click="to_details(name, ip)">
+        <el-row type="flex">
+          <el-col class="video-name">
+            <span>{{ name }}</span>
+            <el-divider/>
+          </el-col>
+          <el-col>
+            <img v-if="!hasError" style="width: 100%;height: 10vh;" :src="src" :key="src"/>
+            <el-alert style="width: 100%;height: 10vh;" v-else title="获取预览失败" type="error"/>
+          </el-col>
+        </el-row>
+      </div>
+      <el-divider/>
 
       <el-button class="inline-block" type="primary" @click="play" size="small">
         <el-icon>
-          <VideoPlay />
+          <VideoPlay/>
         </el-icon>
-        播放</el-button>
+        播放
+      </el-button>
       <el-button class="inline-block" type="primary" @click="pause" size="small">
         <el-icon>
-          <VideoPause />
+          <VideoPause/>
         </el-icon>
         暂停
       </el-button>
