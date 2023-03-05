@@ -1,4 +1,4 @@
 set -x
-rm -rf ../../RustProjects/broadcast/static/*
+rm -rf ../static/*
 yarn run build
-cp -r dist/* ../../RustProjects/broadcast/static/
+cp -r dist/* ../static/
