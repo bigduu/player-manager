@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import {VideoPlay, VideoPause} from '@element-plus/icons-vue';
-import {ElCard, ElRow, ElCol, ElDivider, ElAlert, ElButton, ElIcon} from 'element-plus';
+import {VideoPlay, VideoPause, Edit} from '@element-plus/icons-vue';
+import {ElCard, ElRow, ElCol, ElDivider, ElAlert, ElButton, ElIcon, ElMessageBox, ElMessage} from 'element-plus';
 import {onMounted, onUnmounted, ref} from 'vue';
-import {getScreen, pauseVideo, playVideo} from '../client/api';
+import {getScreen, pauseVideo, playVideo, putNodeName} from '../client/api';
 import router from '../route/router';
 
 const props = defineProps<{ name: string, ip: string }>()
@@ -54,7 +54,33 @@ const to_details = (name: string, ip: string) => {
   })
 }
 
-
+const open = () => {
+  ElMessageBox.prompt('请输入要修改的名字', '改名', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+  })
+      .then(({value}) => {
+        putNodeName(props.ip, value)
+            .then((res: any) => {
+              ElMessage({
+                type: 'success',
+                message: `修改成功`,
+              })
+            })
+            .catch((_: any) => {
+              ElMessage({
+                type: 'error',
+                message: `修改失败`,
+              })
+            })
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消修改',
+        })
+      })
+}
 </script>
 <template>
   <div v-cloak>
@@ -73,18 +99,25 @@ const to_details = (name: string, ip: string) => {
       </div>
       <el-divider/>
 
-      <el-button class="inline-block" type="primary" @click="play" size="small">
+      <el-button class="inline-block" type="primary" @click="play">
         <el-icon>
           <VideoPlay/>
         </el-icon>
         播放
       </el-button>
-      <el-button class="inline-block" type="primary" @click="pause" size="small">
+      <el-button class="inline-block" type="primary" @click="pause">
         <el-icon>
           <VideoPause/>
         </el-icon>
         暂停
       </el-button>
+      <!--     pup a dialog to put put the node name -->
+      <el-button class="inline-block" type="primary" @click="open">
+        <el-icon>
+          <Edit/>
+        </el-icon>
+        改名</el-button>
+
     </el-card>
   </div>
 </template>
@@ -92,10 +125,5 @@ const to_details = (name: string, ip: string) => {
 <style scoped>
 .inline-block {
   display: inline-block;
-}
-
-.no-wrap {
-  display: flex;
-  flex-wrap: nowrap;
 }
 </style>
