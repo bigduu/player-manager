@@ -12,7 +12,7 @@ onMounted(async () => {
   getSrc()
   interval.value = setInterval(async () => {
     getSrc()
-  }, 200)
+  }, 1000)
 })
 
 onUnmounted(() => {
@@ -52,8 +52,8 @@ const pause = async () => {
           <el-divider/>
         </el-col>
         <el-col>
-          <img v-if="!hasError" style="width: 100%" :src="src" :key="src"/>
-          <el-alert style="width: 100%" v-else title="获取截图失败" type="error"/>
+          <img v-show="!hasError" style="width: 100%; height: 100%;" alt="picture" :src="src"/>
+          <el-alert v-show="hasError" style="width: 100%" title="获取截图失败" type="error"/>
         </el-col>
       </el-row>
       <el-divider/>
@@ -77,10 +77,5 @@ const pause = async () => {
 <style scoped>
 .inline-block {
   display: inline-block;
-}
-
-.no-wrap {
-  display: flex;
-  flex-wrap: nowrap;
 }
 </style>

@@ -14,7 +14,7 @@
         <el-col style="height:100%" :xs="24" :sm="12" :md="8" :lg="6" :xl="6" v-for="(source, index) in images"
                 :key="index">
           <div class="grid-content">
-            <ImagePanel :ref="(el)=> setItemRefs(el,source.ip)" :name="source.name" :ip="source.ip"/>
+            <ImagePanel :ref="(el) => setItemRefs(el, source.ip)" :name="source.name" :ip="source.ip"/>
           </div>
         </el-col>
       </el-row>
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ComponentPublicInstance, HTMLAttributes, onMounted, ref, watch} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import ImagePanel from './ImagePanel.vue'
 import {getNodes} from '../client/api'
 import {ClusterNode} from '../model'
@@ -34,7 +34,7 @@ export interface SingleNode {
 }
 
 const itemRefs = ref<any[]>([]);
-const setItemRefs = (el: HTMLElement | ComponentPublicInstance | HTMLAttributes, item: string) => {
+const setItemRefs = (el: any, item: string) => {
   if (el) {
     // if the element is already in the array, don't add it again
     if (itemRefs.value.find((ref) => ref.id === item)) {
