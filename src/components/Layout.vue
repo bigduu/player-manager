@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, ref, watch} from 'vue'
+import {onMounted, onUnmounted, ref, watch} from 'vue'
 import ImagePanel from './ImagePanel.vue'
 import {getNodes} from '../client/api'
 import {ClusterNode} from '../model'
@@ -61,11 +61,17 @@ const allPause = () => {
 
 const nodeList = ref<ClusterNode[]>([])
 
+const interval = ref(0)
+
 onMounted(async () => {
   fetchNodes()
-  setInterval(async () => {
+  interval.value = setInterval(async () => {
     fetchNodes()
   }, 8000)
+})
+
+onUnmounted(() => {
+  clearInterval(interval.value)
 })
 
 const images = ref<SingleNode[]>([])
@@ -73,6 +79,10 @@ const images = ref<SingleNode[]>([])
 const fetchNodes = () => {
   getNodes()
       .then((res: ClusterNode[]) => {
+        // node list sort by ip
+        res.sort((a: ClusterNode, b: ClusterNode) => {
+          return a.ipaddress.localeCompare(b.ipaddress)
+        })
         nodeList.value = res
       })
       .catch((_: any) => {

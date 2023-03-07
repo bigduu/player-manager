@@ -2,8 +2,8 @@ import axios from 'axios';
 import { ClusterNode } from '../model';
 
 
-export const getVideoList = async () => {
-  const response = await axios.get('http://localhost:8081/video_list');
+export const putNodeName = async (host:string,name: string) => {
+  const response = await axios.put(`http://${host}:8081/config/${name}`);
   return response.data;
 }
 
